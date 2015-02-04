@@ -1,3 +1,3 @@
 <?php
-	echo "Suiz!";
+	echo "Yep this works!";
 ?>
