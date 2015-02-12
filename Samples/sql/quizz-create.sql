@@ -5,22 +5,22 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema quizz
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `mydb` ;
+DROP SCHEMA IF EXISTS `quizz` ;
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema quizz
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `quizz` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `quizz` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`user`
+-- Table `quizz`.`user`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`user` ;
+DROP TABLE IF EXISTS `quizz`.`user` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`user` (
+CREATE TABLE IF NOT EXISTS `quizz`.`user` (
   `user_id` INT(20) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `pwd` VARCHAR(45) NOT NULL,
@@ -29,11 +29,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`user` (
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Quizz`
+-- Table `quizz`.`Quizz`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Quizz` ;
+DROP TABLE IF EXISTS `quizz`.`Quizz` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Quizz` (
+CREATE TABLE IF NOT EXISTS `quizz`.`Quizz` (
   `quizz_id` INT(20) NOT NULL,
   `user_id` INT(20) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
@@ -42,28 +42,28 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Quizz` (
   UNIQUE INDEX `title_UNIQUE` (`title` ASC),
   CONSTRAINT `fk_Quizz_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `quizz`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Question`
+-- Table `quizz`.`Question`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Question` ;
+DROP TABLE IF EXISTS `quizz`.`Question` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Question` (
+CREATE TABLE IF NOT EXISTS `quizz`.`Question` (
   `question_id` INT(20) NOT NULL,
   `question_text` VARCHAR(255) NULL,
   PRIMARY KEY (`question_id`));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`option`
+-- Table `quizz`.`option`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`option` ;
+DROP TABLE IF EXISTS `quizz`.`option` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`option` (
+CREATE TABLE IF NOT EXISTS `quizz`.`option` (
   `option_id` INT(20) NOT NULL,
   `question_id` INT(20) NOT NULL,
   `option_text` VARCHAR(255) NULL,
@@ -72,17 +72,17 @@ CREATE TABLE IF NOT EXISTS `mydb`.`option` (
   INDEX `fk_Options_Question1_idx` (`question_id` ASC),
   CONSTRAINT `fk_Options_Question1`
     FOREIGN KEY (`question_id`)
-    REFERENCES `mydb`.`Question` (`question_id`)
+    REFERENCES `quizz`.`Question` (`question_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Test`
+-- Table `quizz`.`Test`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Test` ;
+DROP TABLE IF EXISTS `quizz`.`Test` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Test` (
+CREATE TABLE IF NOT EXISTS `quizz`.`Test` (
   `test_id` INT(20) NOT NULL,
   `quizz_id` INT(20) NOT NULL,
   `user_id` INT(20) NOT NULL,
@@ -92,33 +92,33 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Test` (
   INDEX `fk_Test_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_Test_Quizz1`
     FOREIGN KEY (`quizz_id`)
-    REFERENCES `mydb`.`Quizz` (`quizz_id`)
+    REFERENCES `quizz`.`Quizz` (`quizz_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Test_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `quizz`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Options_has_Question`
+-- Table `quizz`.`Options_has_Question`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`Options_has_Question` ;
+DROP TABLE IF EXISTS `quizz`.`Options_has_Question` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`Options_has_Question` (
+CREATE TABLE IF NOT EXISTS `quizz`.`Options_has_Question` (
   `option_nbr` INT(20) NOT NULL,
   `question_no` INT(20) NOT NULL,
   PRIMARY KEY (`option_nbr`, `question_no`));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`quizz_question`
+-- Table `quizz`.`quizz_question`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`quizz_question` ;
+DROP TABLE IF EXISTS `quizz`.`quizz_question` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`quizz_question` (
+CREATE TABLE IF NOT EXISTS `quizz`.`quizz_question` (
   `quizz_id` INT NOT NULL,
   `question_id` INT(20) NOT NULL,
   PRIMARY KEY (`quizz_id`, `question_id`),
@@ -126,22 +126,22 @@ CREATE TABLE IF NOT EXISTS `mydb`.`quizz_question` (
   INDEX `fk_Quizz_has_Question_Quizz1_idx` (`quizz_id` ASC),
   CONSTRAINT `fk_Quizz_has_Question_Quizz1`
     FOREIGN KEY (`quizz_id`)
-    REFERENCES `mydb`.`Quizz` (`quizz_id`)
+    REFERENCES `quizz`.`Quizz` (`quizz_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Quizz_has_Question_Question1`
     FOREIGN KEY (`question_id`)
-    REFERENCES `mydb`.`Question` (`question_id`)
+    REFERENCES `quizz`.`Question` (`question_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`answer`
+-- Table `quizz`.`answer`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`answer` ;
+DROP TABLE IF EXISTS `quizz`.`answer` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`answer` (
+CREATE TABLE IF NOT EXISTS `quizz`.`answer` (
   `test_id` INT(20) NOT NULL,
   `option_id` INT(20) NOT NULL,
   PRIMARY KEY (`test_id`, `option_id`),
@@ -149,12 +149,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`answer` (
   INDEX `fk_Test_has_Options_Test1_idx` (`test_id` ASC),
   CONSTRAINT `fk_Test_has_Options_Test1`
     FOREIGN KEY (`test_id`)
-    REFERENCES `mydb`.`Test` (`test_id`)
+    REFERENCES `quizz`.`Test` (`test_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Test_has_Options_Options1`
     FOREIGN KEY (`option_id`)
-    REFERENCES `mydb`.`option` (`option_id`)
+    REFERENCES `quizz`.`option` (`option_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
