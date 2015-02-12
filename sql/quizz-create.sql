@@ -151,3 +151,19 @@ CREATE TABLE IF NOT EXISTS `quizz`.`answer` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+/* Create a user to be used in PHP for the connection,
+ * and give him all grants on the DB.
+ */
+-- Delete the user ...
+DELETE FROM mysql.user WHERE user='quizz_user' ;
+-- and his grants
+DELETE FROM mysql.db WHERE user='quizz_user' ;
+DELETE FROM mysql.tables_priv WHERE user='quizz_user' ;
+FLUSH PRIVILEGES ;
+-- Create him
+CREATE USER quizz_user@localhost IDENTIFIED by 'quizz_password' ;
+-- Grant him rights on the DB ...
+GRANT ALL ON quizz.* TO quizz_user@localhost ;
+-- and on the stored procedure
+GRANT SELECT ON mysql.proc TO quizz_user@localhost ;
