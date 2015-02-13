@@ -9,3 +9,4 @@ RewriteEngine on
 RewriteBase /quiz/
 # Example
 RewriteRule ^answer-(.*)-in-(.*)$ AnswerResource.php?optionId=$1&testId=$2
+RewriteRule ^test-(.*)-(.*)$ TestResource.php?userId=$1&quizzId=$2
