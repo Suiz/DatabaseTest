@@ -75,11 +75,13 @@ class QuizResource extends HttpResource {
                 $stmt1 = $db->prepare($sql);
                 $ok = $stmt1->execute();
                 $questions = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+                if($ok){
                 $result["questions"] =$questions;
+                
                 // Produce utf8 encoded json
                 $this->headers[] = "Content-type: text/json; charset=utf-8";
                 $this->body = json_encode($result);
-            } else {
+            } }else {
                 $this->exit_error(404);
             }
         } catch (PDOException $e) {
