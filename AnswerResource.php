@@ -34,24 +34,40 @@ require_once("HttpResource.php");
 require_once("db.php");
 
 class AnswerResource extends HttpResource {
-  /** Person id */
-  protected $id;
+  /** Option id & Test id */
+  protected $optionId;
+  protected $testId;
 
   /** Initialize $id. Send 400 if id missing or not positive integer */
   public function init() {
-    if (isset($_GET["id"])) {
-      if (is_numeric($_GET["id"])) {
-        $this->id = 0 + $_GET["id"]; // transformer en numerique
-        if (!is_int($this->id) || $this->id <= 0) {
-          $this->exit_error(400, "idNotPositiveInteger");
+    if (isset($_GET["optionId"])) {
+      if (is_numeric($_GET["optionId"])) {
+        $this->optionId = 0 + $_GET["optionId"]; // transformer en numerique
+        if (!is_int($this->optionId) || $this->optionId <= 0) {
+          $this->exit_error(400, "optionIdNotPositiveInteger");
         }
       }
       else {
-        $this->exit_error(400, "idNotPositiveInteger");
+        $this->exit_error(400, "optionIdNotPositiveInteger");
       }
     }
     else {
-      $this->exit_error(400, "idRequis");
+      $this->exit_error(400, "optionIdRequis");
+    }
+
+    if (isset($_GET["testId"])) {
+      if (is_numeric($_GET["testId"])) {
+        $this->testId = 0 + $_GET["testId"]; // transformer en numerique
+        if (!is_int($this->testId) || $this->testId <= 0) {
+          $this->exit_error(400, "testIdNotPositiveInteger");
+        }
+      }
+      else {
+        $this->exit_error(400, "testIdNotPositiveInteger");
+      }
+    }
+    else {
+      $this->exit_error(400, "testIdRequis");
     }
   }
 
@@ -59,8 +75,8 @@ class AnswerResource extends HttpResource {
     // Call the parent
     parent::do_get();
     try {
-      $db = DemoDB::getConnection();
-      $sql = "SELECT person_id, name FROM person WHERE person_id=:person_id";
+      $db = db::getConnection();
+      $sql = "SELECT test_id, option_id FROM answer";
       $stmt = $db->prepare($sql);
       $stmt->bindValue(":person_id", $this->id);
       $ok = $stmt->execute();
@@ -111,7 +127,7 @@ class AnswerResource extends HttpResource {
     }
     else {
       try {
-        $db = DemoDB::getConnection();
+        $db = db::getConnection();
         $sql = "UPDATE person SET name=:name WHERE person_id=:id";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(":name", ucwords(trim($_PUT["name"])));
@@ -185,9 +201,6 @@ class AnswerResource extends HttpResource {
 
 
 // Simply run the resource
-//AnswerResource::run();
+AnswerResource::run();
 
-
-echo $_GET["optionId"];
-echo $_GET["testId"];
 ?>
