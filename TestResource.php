@@ -38,14 +38,33 @@ class TestResource extends HttpResource {
 		}
 	}
 	
+	/** Is the request sent by an admin?
+	 * Very basic answer here: only user admin (password admin)
+	 * is admin. In realistic cases, we should access the DB.
+	 * @return type
+	 */
+	protected function is_admin() {
+		$result = false;
+		if (isset($_SERVER["PHP_AUTH_USER"])) {
+			$result = $_SERVER["PHP_AUTH_USER"] == "admin"
+					&& $_SERVER["PHP_AUTH_PW"] == "admin";
+		}
+		return $result;
+	
+	}
+	
 	protected function do_post() {
+		
+		if (!$this->is_admin()) {
+			$this->exit_error(401, "mustBeAdmin");
+		}
 		
 		if (empty($_GET["userId"]) || empty($_GET["quizzId"])) {
 			$this->exit_error(400, "userIdandquizzIdRequired");
 		}
 		try {
 			$db = db::getConnection();
-			$sql = "INSERT INTO test (test_id, quizz_id, user_id) VALUES (:testId, :quizzId, :userId)";
+			$sql = "INSERT INTO test (quiz_id, user_id) VALUES (:quizzId, :userId)";
 			
 			$stmt = $db->prepare($sql);
 			
@@ -55,11 +74,15 @@ class TestResource extends HttpResource {
 			
 			$ok = $stmt->execute();
 			if ($ok) {
-				$this->statusCode = 204;
-				$this->body = "";
 				$nb = $stmt->rowCount();
 				if ($nb == 0) {
 					$this->exit_error(404);
+				}
+				else {
+					$last_insert = $db->lastInsertId();
+					//die($last_insert);
+					$this->statusCode = 204;
+					$this->headers[] = "Location: test-$last_insert";
 				}
 			}
 			else {
