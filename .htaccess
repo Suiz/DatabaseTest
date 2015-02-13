@@ -1,0 +1,11 @@
+# Send all responses in utf-8
+AddDefaultCharset utf-8
+# Allow directory browsing
+Options +Indexes
+
+#Use url rewriting
+RewriteEngine on
+# Base directory for rewritng
+RewriteBase /quiz/
+# Example
+RewriteRule ^answer-(.*)-in-(.*)$ AnswerResource.php?optionId=$1&testId=$2

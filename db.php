@@ -12,10 +12,10 @@ class db {
   /** Give a connection to the quizz DB, in UTF-8 */
   public static function getConnection() {
     // DB configuration
-    $db = "quizz";
+    $db = "quiz";
     $dsn = "mysql:dbname=$db;host=localhost";
-    $user = "user_id";
-    $password = "pwd";
+    $user = "quiz_user";
+    $password = "quiz_password";
     // Get a DB connection with PDO library
     $bdd = new PDO($dsn, $user, $password);
     // Set communication in utf-8
