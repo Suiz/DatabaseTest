@@ -1,6 +1,11 @@
 <?php
-/** Resource for creating a test. URL: test-{userId}-{quizzId}.
- * 
+/** Resource for a test. URL: test-{userId}-{quizzId}.
+ * Methods:
+ * <ul>
+ *  <li>POST to create a new test.
+ *  </li>
+ * </ul>
+ *
  */
 require_once("HttpResource.php");
 require_once("db.php");
@@ -30,6 +35,40 @@ class TestResource extends HttpResource {
 		}
 		else {
 			$this->exit_error(400, "userIdandquizzIdRequired");
+		}
+	}
+	
+	protected function do_post() {
+		
+		if (empty($_GET["userId"]) || empty($_GET["quizzId"])) {
+			$this->exit_error(400, "userIdandquizzIdRequired");
+		}
+		try {
+			$db = db::getConnection();
+			$sql = "INSERT INTO test (test_id, quizz_id, user_id) VALUES (:testId, :quizzId, :userId)";
+			
+			$stmt = $db->prepare($sql);
+			
+			$stmt->bindValue(":userId", $this->userId);
+			$stmt->bindValue(":quizzId", $this->quizzId);
+			//$stmt->bindValue(":testId", $last_id);
+			
+			$ok = $stmt->execute();
+			if ($ok) {
+				$this->statusCode = 204;
+				$this->body = "";
+				$nb = $stmt->rowCount();
+				if ($nb == 0) {
+					$this->exit_error(404);
+				}
+			}
+			else {
+				$erreur = $stmt->errorInfo();
+				$this->exit_error(409, $erreur[1]." : ".$erreur[2]);
+			}
+		}
+		catch (PDOException $e) {
+			$this->exit_error(500, $e->getMessage());
 		}
 	}
 }
