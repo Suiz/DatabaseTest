@@ -22,8 +22,8 @@ $url = "answer-$id-in-$testId";
         padding: 4px;
       }
     </style>
-    <script src="../script/jquery-1.11.2.min.js"></script>
-    <script src="../script/base64.js"></script>
+    <script src="./script/jquery-1.11.2.min.js"></script>
+    <script src="./script/base64.js"></script>
   </head>
 
   <body>
@@ -32,6 +32,7 @@ $url = "answer-$id-in-$testId";
       <input id="name"/>
       <br/>
       <button id="update">Submit</button>
+      <button id="reload">Reload</button>
     </form>
     <div id="message">message area</div>
 
@@ -49,14 +50,14 @@ $url = "answer-$id-in-$testId";
             // xhr is the related XMLHttpRequest object
             error: function (xhr, string) {
               var msg = (xhr.status == 404)
-                      ? "Person  <?= $id ?> not found"
+                      ? "Question  <?= $id ?> not found"
                       : "Error : " + xhr.status + " " + xhr.statusText;
               $("#message").html(msg);
             },
             // success processing (when 200,201, 204 etc)
             success: function (data) {
               $("#name").val(data.name);
-              $("#message").html("Person <?= $id ?> loaded")
+              $("#message").html("Question <?= $id ?> loaded")
             }
           });
         });
