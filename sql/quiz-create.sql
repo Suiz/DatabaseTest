@@ -261,4 +261,4 @@ GRANT ALL ON quiz.* TO quiz_user@localhost ;
 GRANT SELECT ON mysql.proc TO quiz_user@localhost ;
 
 
-call quiz_reset()$$
+call quiz_reset();
