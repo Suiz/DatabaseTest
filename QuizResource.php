@@ -67,6 +67,15 @@ class QuizResource extends HttpResource {
             $ok = $stmt->execute();
             if ($ok) {
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $sql = "
+                    select question_id ,question_text from question where question_id in
+                    (
+                        select question_id from quiz_question where quiz_id=$this->quizId
+                    );";
+                $stmt1 = $db->prepare($sql);
+                $ok = $stmt1->execute();
+                $questions = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+                $result["questions"] =$questions;
                 // Produce utf8 encoded json
                 $this->headers[] = "Content-type: text/json; charset=utf-8";
                 $this->body = json_encode($result);
@@ -77,6 +86,7 @@ class QuizResource extends HttpResource {
             $this->exit_error(500, $e->getMessage());
         }
     }
+
 }
 
 // Simply run the resource
