@@ -76,7 +76,7 @@ class AnswerResource extends HttpResource {
     parent::do_get();
     try {
       $db = db::getConnection();
-      $sql = "SELECT person_id, name FROM person WHERE person_id=:person_id";
+      $sql = "SELECT test_id, option_id FROM answer";
       $stmt = $db->prepare($sql);
       $stmt->bindValue(":person_id", $this->id);
       $ok = $stmt->execute();
@@ -127,7 +127,7 @@ class AnswerResource extends HttpResource {
     }
     else {
       try {
-        $db = DemoDB::getConnection();
+        $db = db::getConnection();
         $sql = "UPDATE person SET name=:name WHERE person_id=:id";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(":name", ucwords(trim($_PUT["name"])));
@@ -203,7 +203,4 @@ class AnswerResource extends HttpResource {
 // Simply run the resource
 AnswerResource::run();
 
-
-echo $_GET["optionId"];
-echo $_GET["testId"];
 ?>
